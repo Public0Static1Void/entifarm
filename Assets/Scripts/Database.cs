@@ -4,7 +4,18 @@ using UnityEngine;
 
 using System.Data;
 using Mono.Data.Sqlite;
+using System;
 
+public class Plants
+{
+    public string id;
+    public string name;
+    public string time;
+    public string quantity;
+    public string sell_price;
+    public string buy_price;
+    public string season = "0";
+}
 public class Database : MonoBehaviour
 {
     IDbConnection conn;
@@ -18,6 +29,10 @@ public class Database : MonoBehaviour
 
         conn.Open();
 
+        Plants a = new Plants();
+        ArrayList b = GetPlants();
+
+        a.id = b[0].ToString();
         Debug.Log(GetPlants()[1].ToString());
     }
 
@@ -32,12 +47,12 @@ public class Database : MonoBehaviour
 
         IDataReader reader = comm.ExecuteReader();
 
-        res.Add(reader[0].ToString());
-        res.Add(reader[1].ToString());
-        res.Add(reader[2].ToString());
-        res.Add(reader[3].ToString());
-        res.Add(reader[4].ToString());
-        res.Add(reader[5].ToString());
+        for (int i = 0; i < reader.FieldCount; i++)
+        {
+            res.Add(reader[i].ToString());
+        }
+
+        conn.Close();
 
         return res;
     }
