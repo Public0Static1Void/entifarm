@@ -18,7 +18,7 @@ public class Plants
 }
 public class Database : MonoBehaviour
 {
-    IDbConnection conn;
+    public static IDbConnection conn;
 
     string db_name = "entifarm.db";
 
@@ -30,30 +30,63 @@ public class Database : MonoBehaviour
         conn.Open();
 
         Plants a = new Plants();
-        ArrayList b = GetPlants();
 
-        a.id = b[0].ToString();
-        Debug.Log(GetPlants()[1].ToString());
+        GetPlants();
     }
 
-    public ArrayList GetPlants()
+    public static List<ArrayList> GetPlants()
     {
-        ArrayList res = new ArrayList();
+        List<ArrayList> res = new List<ArrayList>();
 
-        string query = "SELECT * FROM plants;";
+        string query = "SELECT * FROM plants";
+
+        /*
         IDbCommand comm = conn.CreateCommand();
 
         comm.CommandText = query;
 
+        
+        
+
         IDataReader reader = comm.ExecuteReader();
-
-        for (int i = 0; i < reader.FieldCount; i++)
+        
+        while(reader.Read())
         {
-            res.Add(reader[i].ToString());
+            for (int i = 0; i < reader.FieldCount; i++)
+            {
+                res.Add(reader.GetValue(i));
+                Debug.Log(reader.GetValue(i));
+            }
         }
+        */
 
-        conn.Close();
+        // Crea un ocmando para ejecutar la query
+        using (IDbCommand comm = conn.CreateCommand())
+        {
+            comm.CommandText = query;
 
-        return res;
+
+            // Ejecuta la query
+            using (IDataReader reader = comm.ExecuteReader())
+            {
+                int aux = 0;
+                // Lee los datos
+                while (reader.Read())
+                {                
+                    res.Add(new ArrayList());
+                    res[aux] = new ArrayList();
+
+                    for (int i = 0; i < reader.FieldCount; i++)
+                    {
+                        res[aux].Add(reader[i].ToString());
+                        Debug.Log(reader[i].ToString());
+                    }
+
+                    aux++;
+                }
+            }
+
+            return res;
+        }
     }
 }
