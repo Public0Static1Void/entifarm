@@ -23,7 +23,7 @@ public class PlantsGrid : MonoBehaviour
     [SerializeField] private float size = 0;
     [SerializeField] private float offset = 0;
 
-    void Awake()
+    void Start()
     {
         plants_data = new List<Plants>();
 
@@ -43,10 +43,7 @@ public class PlantsGrid : MonoBehaviour
 
             plants_data.Add(pl);
         }
-    }
 
-    void Start()
-    {
         // Crear los paneles
         for (int i = 0; i < height; i++)
         {
@@ -57,6 +54,7 @@ public class PlantsGrid : MonoBehaviour
 
                 /// Crea el objeto en la escena y pone el poseedor del script como parent
                 Instantiate(panel);
+                panel.transform.SetParent(transform, true);
 
                 /// Setea la posición y el tamaño
                 panel.AddComponent<RectTransform>();
@@ -72,8 +70,6 @@ public class PlantsGrid : MonoBehaviour
                 /// Le pone el sprite al botón
                 panel.AddComponent<UnityEngine.UI.Image>();
                 panel.GetComponent<UnityEngine.UI.Image>().sprite = plants_spr;
-
-                panel.transform.SetParent(transform, true);
             }
         }
     }

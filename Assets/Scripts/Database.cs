@@ -23,13 +23,11 @@ public class Database : MonoBehaviour
     string db_name = "entifarm.db";
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         conn = new SqliteConnection(string.Format("URI=file:{0}", db_name));
 
         conn.Open();
-
-        Plants a = new Plants();
 
         GetPlants();
     }
