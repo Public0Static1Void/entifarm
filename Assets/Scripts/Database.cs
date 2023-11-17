@@ -8,13 +8,13 @@ using System;
 
 public class Plants
 {
-    public string id;
+    public int id;
     public string name;
-    public string time;
-    public string quantity;
-    public string sell_price;
-    public string buy_price;
-    public string season = "0";
+    public float time;
+    public int quantity;
+    public float sell_price;
+    public float buy_price;
+    public int season = 0;
 }
 public class Database : MonoBehaviour
 {
@@ -23,7 +23,7 @@ public class Database : MonoBehaviour
     string db_name = "entifarm.db";
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         conn = new SqliteConnection(string.Format("URI=file:{0}", db_name));
 
@@ -32,6 +32,68 @@ public class Database : MonoBehaviour
         Plants a = new Plants();
 
         GetPlants();
+    }
+
+    public static List<ArrayList> SendQuery(string query)
+    {
+        List<ArrayList> res = new List<ArrayList>();
+
+        using (IDbCommand cmd = conn.CreateCommand())
+        {
+            cmd.CommandText = query;
+
+            using (IDataReader reader = cmd.ExecuteReader())
+            {
+                int aux = 0;
+
+                while (reader.Read())
+                {
+                    res.Add(new ArrayList());
+                    res[aux] = new ArrayList();
+
+                    for (int i = 0; i < reader.FieldCount; i++)
+                    {
+                        res[aux].Add(reader[i].ToString());
+                        Debug.Log(reader[i].ToString());
+                    }
+
+                    aux++;
+                }
+            }
+        }
+
+        return res;
+    }
+
+    public static List<ArrayList> GetInventory()
+    {
+        List<ArrayList> res = new List<ArrayList>();
+
+        using (IDbCommand cmd = conn.CreateCommand())
+        {
+            cmd.CommandText = "SELECT * FROM plants_users";
+
+            using (IDataReader reader = cmd.ExecuteReader())
+            {
+                int aux = 0;
+
+                while (reader.Read())
+                {
+                    res.Add(new ArrayList());
+                    res[aux] = new ArrayList();
+
+                    for (int i = 0; i < reader.FieldCount; i++)
+                    {
+                        res[aux].Add(reader[i].ToString());
+                        Debug.Log(reader[i].ToString());
+                    }
+
+                    aux++;
+                }
+            }
+        }
+
+        return res;
     }
 
     public static List<ArrayList> GetPlants()
@@ -60,7 +122,7 @@ public class Database : MonoBehaviour
         }
         */
 
-        // Crea un ocmando para ejecutar la query
+        // Crea un comando para ejecutar la query
         using (IDbCommand comm = conn.CreateCommand())
         {
             comm.CommandText = query;
