@@ -6,16 +6,7 @@ using System.Data;
 using Mono.Data.Sqlite;
 using System;
 
-public class Plants
-{
-    public int id;
-    public string name;
-    public float time;
-    public int quantity;
-    public float sell_price;
-    public float buy_price;
-    public int season = 0;
-}
+
 public class Database : MonoBehaviour
 {
     public static IDbConnection conn;
@@ -65,13 +56,23 @@ public class Database : MonoBehaviour
         return res;
     }
 
+    public static void InsertOnInventory(int plant_id)
+    {
+        using (IDbCommand cmd = conn.CreateCommand())
+        {
+            string comm_txt = string.Format("INSERT INTO plants_users (id_user, id_plant) VALUES (1,{0})", plant_id);
+            cmd.CommandText = comm_txt;
+
+            cmd.ExecuteNonQuery();
+        }
+    }
     public static List<ArrayList> GetInventory()
     {
         List<ArrayList> res = new List<ArrayList>();
 
         using (IDbCommand cmd = conn.CreateCommand())
         {
-            cmd.CommandText = "SELECT * FROM plants_users";
+            cmd.CommandText = "SELECT * FROM plants WHERE plants_users.id_user=1"; // hay que poner aquí la id del usuario para que no salgan todos
 
             using (IDataReader reader = cmd.ExecuteReader())
             {

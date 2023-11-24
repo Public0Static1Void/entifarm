@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -13,12 +14,11 @@ public class Grid : MonoBehaviour
     private List<Plants> plants_data;
 
     [Header("Sprite del panel")]
-    private UnityEngine.UI.Button plants_bt;
-    [SerializeField] private Sprite plants_spr;
+    public Sprite plants_spr;
 
     [Header("Tamaño de la grid")]
-    [SerializeField] private int width;
-    [SerializeField] private int height;
+    public int width;
+    public int height;
 
     [Header("Otros datos de diseño")]
     [SerializeField] private float x_size = 0;
@@ -36,19 +36,11 @@ public class Grid : MonoBehaviour
     [SerializeField] private bool createOnLaunch = false;
 
 
-    
-    private List<GameObject> slide_show;
-
     private List<GameObject> cells;
 
-    private RectTransform rect;
-
-    void Start()
+    void Awake()
     {
         cells = new List<GameObject>();
-        slide_show = new List<GameObject>();
-
-        rect = GetComponent<RectTransform>();
 
         /*
         plants_data = new List<Plants>();
@@ -103,6 +95,12 @@ public class Grid : MonoBehaviour
                 /// Cambia el nombre del objeto
                 panel.name = string.Format("{0} {1}", transform.name, i + j);
 
+                /// Añade un texto al panel
+                ///panel.AddComponent<UnityEngine.UI.Text>();
+                ///Text text = panel.GetComponent<Text>();
+                ///text.text = string.Format("{0} {1}", transform.name, i + j);
+                ///text.color = Color.white;
+
                 /// Pone al poseedor del script como padre
                 if (setParent)
                     panel.transform.SetParent(transform, true);
@@ -125,6 +123,15 @@ public class Grid : MonoBehaviour
         return cells[i];
     }
 
+    public void ChangeCellText(GameObject cell, string text)
+    {
+        cell.GetComponent<UnityEngine.UI.Text>().text = text;
+    }
+
+    public void ChangeCellImage(GameObject cell, Sprite spr)
+    {
+        cell.GetComponent<UnityEngine.UI.Image>().sprite = spr;
+    }
     private void OnDrawGizmos()
     {
         Vector3 panel_size = new Vector3 (x_size * 100, y_size * 100, 0);
