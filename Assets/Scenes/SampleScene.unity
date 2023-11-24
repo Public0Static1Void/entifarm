@@ -396,6 +396,7 @@ GameObject:
   m_Component:
   - component: {fileID: 692058085}
   - component: {fileID: 692058086}
+  - component: {fileID: 692058087}
   m_Layer: 5
   m_Name: Floor grid
   m_TagString: Untagged
@@ -435,7 +436,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af892a4b6b9226a45b76fd80c49d6c5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  plants_spr: {fileID: 0}
+  plants_spr: {fileID: 21300000, guid: 2a9f25bc9d68047429b7d6ec7d85fbed, type: 3}
   width: 8
   height: 8
   x_size: 1
@@ -447,6 +448,19 @@ MonoBehaviour:
   scroll_min: 0
   setParent: 1
   createOnLaunch: 1
+--- !u!114 &692058087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 692058084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34266e6f9bf08e64caafc26166aff365, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  next: 0
 --- !u!1 &767551273
 GameObject:
   m_ObjectHideFlags: 0
@@ -648,6 +662,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1370605762}
   - component: {fileID: 1370605763}
+  - component: {fileID: 1370605764}
   m_Layer: 5
   m_Name: Shop
   m_TagString: Untagged
@@ -699,6 +714,19 @@ MonoBehaviour:
   scroll_min: 0
   setParent: 1
   createOnLaunch: 1
+--- !u!114 &1370605764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1370605761}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbbf92b9f9d4faf4088103c8c65687b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  coins_text: {fileID: 0}
 --- !u!1 &1396181075
 GameObject:
   m_ObjectHideFlags: 0
@@ -914,6 +942,51 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Padding: {x: 0, y: 0, z: 0, w: 0}
   m_Softness: {x: 0, y: 0}
+--- !u!1 &2084536300
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2084536302}
+  - component: {fileID: 2084536301}
+  m_Layer: 0
+  m_Name: Timer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2084536301
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2084536300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74f64dd835194d146898a9cc71b5b04b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tick: 0
+--- !u!4 &2084536302
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2084536300}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2136366540
 GameObject:
   m_ObjectHideFlags: 0
@@ -988,7 +1061,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 040db859fa6e72d4aafd28169dd3d98f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  plants: []
 --- !u!1 &2138394600
 GameObject:
   m_ObjectHideFlags: 0
