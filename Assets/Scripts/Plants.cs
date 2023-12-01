@@ -47,9 +47,9 @@ public class Plants
 
     public bool Grow(int n)
     {
-        if (curr_sprite >= sprites.Count)
+        if (curr_sprite >= sprite_num)
             return false;
-        if (n >= sprites.Count)
+        if (n >= sprite_num)
             n = 1;
 
         curr_sprite += n;

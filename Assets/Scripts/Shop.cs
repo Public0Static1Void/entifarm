@@ -8,14 +8,18 @@ public class Shop : MonoBehaviour
     private List<Plants> plants;
 
     private Grid sh_grid;
+    private Inventory inv;
 
     [SerializeField] private UnityEngine.UI.Text coins_text;
     private float coins = 100;
+
 
     private void Start()
     {
         list = Database.GetPlants();
         plants = new List<Plants>();
+
+        inv = GameObject.Find("Inventory").GetComponent<Inventory>();
 
         sh_grid = GetComponent<Grid>();
         sh_grid.height = list.Count;
@@ -38,16 +42,13 @@ public class Shop : MonoBehaviour
 
             GameObject ob = sh_grid.GetCell(i);
 
-            sh_grid.ChangeCellImage(ob, pl.sprites[0]);
+            ob.GetComponent<UnityEngine.UI.Image>().sprite = pl.sprites[0];
 
             ob.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() => BuyPlant(pl)); // Cambia el listener por defecto
         }
     }
 
-    public void OpenShop()
-    {
-
-    }
+    
 
     public void BuyPlant(Plants pl)
     {
@@ -57,5 +58,6 @@ public class Shop : MonoBehaviour
         coins -= pl.buy_price;
 
         Database.InsertOnInventory(pl.id);
+        inv.UpdateInventory();
     }
 }

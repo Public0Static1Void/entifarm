@@ -20,7 +20,20 @@ public class Inventory : MonoBehaviour
         pl_grid = fl.GetComponent<Grid>();
         floor = fl.GetComponent<Floor>();
 
-        list = Database.GetPlants();
+        UpdateInventory();
+    }
+
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(1))
+        {
+            AddPlant();
+        }
+    }
+
+    public void UpdateInventory()
+    {
+        list = Database.GetInventory();
         plants = new List<Plants>();
 
         for (int i = 0; i < list.Count; i++)
@@ -29,7 +42,7 @@ public class Inventory : MonoBehaviour
 
             pl.id = int.Parse("" + list[i][0]);
             pl.name = list[i][1].ToString();
-            pl.time = int.Parse("" +list[i][2]);
+            pl.time = int.Parse("" + list[i][2]);
             pl.quantity = int.Parse("" + list[i][3]);
             pl.sell_price = float.Parse("" + list[i][4]);
             pl.buy_price = float.Parse("" + list[i][5]);
@@ -39,16 +52,9 @@ public class Inventory : MonoBehaviour
 
             plants.Add(pl);
 
-            //Pone el texto en la celda
-            inv_grid.ChangeCellImage(inv_grid.GetCell(i), plants[i].sprites[0]);
-        }
-    }
-
-    private void Update()
-    {
-        if (Input.GetMouseButtonDown(1))
-        {
-            AddPlant();
+            //Pone el sprite en la celda
+            if (pl.sprites.Count > 0)
+                inv_grid.ChangeCellImage(i, pl.sprites[0]);
         }
     }
 
@@ -63,6 +69,10 @@ public class Inventory : MonoBehaviour
             next_plant++;
         else
             next_plant = 0;
+
+    }
+    public void RemovePlant()
+    {
 
     }
 }

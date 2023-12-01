@@ -37,10 +37,12 @@ public class Grid : MonoBehaviour
 
 
     private List<GameObject> cells;
+    private List<UnityEngine.UI.Image> cells_im;
 
     void Awake()
     {
         cells = new List<GameObject>();
+        cells_im = new List<UnityEngine.UI.Image>();
 
         /*
         plants_data = new List<Plants>();
@@ -86,11 +88,12 @@ public class Grid : MonoBehaviour
 
                 /// Añade al botón su acción
                 panel.AddComponent<UnityEngine.UI.Button>();
-                panel.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() => PrintPosition(panel));
+                //panel.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() => PrintPosition(panel));
 
                 /// Le pone el sprite al botón
                 panel.AddComponent<UnityEngine.UI.Image>();
-                panel.GetComponent<UnityEngine.UI.Image>().sprite = plants_spr;
+                UnityEngine.UI.Image im = panel.GetComponent<UnityEngine.UI.Image>();
+                im.sprite = plants_spr;
 
                 /// Cambia el nombre del objeto
                 panel.name = string.Format("{0} {1}", transform.name, i + j);
@@ -108,6 +111,7 @@ public class Grid : MonoBehaviour
                     panel.transform.SetParent(transform.parent, true);
 
                 cells.Add(panel);
+                cells_im.Add(im);
             }
         }
     }
@@ -128,9 +132,12 @@ public class Grid : MonoBehaviour
         cell.GetComponent<UnityEngine.UI.Text>().text = text;
     }
 
-    public void ChangeCellImage(GameObject cell, Sprite spr)
+    public void ChangeCellImage(int n, Sprite spr)
     {
-        cell.GetComponent<UnityEngine.UI.Image>().sprite = spr;
+        if (n > cells_im.Count)
+            return;
+
+        cells_im[n].sprite = spr;
     }
     private void OnDrawGizmos()
     {

@@ -5,6 +5,7 @@ using UnityEngine;
 public class Floor : MonoBehaviour
 {
     private Grid fl_grid;
+    private Inventory inv;
 
     private List<Plants> plants;
 
@@ -18,26 +19,29 @@ public class Floor : MonoBehaviour
 
     void Update()
     {
-        for (int i = 0; i < next; i++)
+        for (int i = 0; i < next && plants.Count > 0; i++)
         {
             if (plants[i].grow_tick > Timer.timer.tick)
             {
                 if (!plants[i].Grow(1))
-                    RemovePlant(plants[i], i);
+                    RemovePlant(i);
             }
         }
     }
 
-    private void RemovePlant(Plants pl, int pos)
+    private void RemovePlant(int pos)
     {
-        plants.RemoveAt(pos);
+        if (plants.Count <= 0)
+            return;
 
         // Asigna la nueva posición de las plantas
-        for (int i = 0; i < next - 1; i++)
+        for (int i = 0; i < next; i++)
         {
-            fl_grid.ChangeCellImage(fl_grid.GetCell(i), plants[i].sprites[plants[i].curr_sprite]);
+            fl_grid.ChangeCellImage(i, plants[i].sprites[plants[i].curr_sprite]);
         }
-        fl_grid.ChangeCellImage(fl_grid.GetCell(next), fl_grid.plants_spr); /// Cambia el último sprite al suelo
+        fl_grid.ChangeCellImage(next, fl_grid.plants_spr); /// Cambia el último sprite al suelo
+
+        plants.RemoveAt(pos); // Quita la planta
 
         next--;
     }
@@ -53,7 +57,7 @@ public class Floor : MonoBehaviour
 
         plants.Add(pl);
 
-        fl_grid.ChangeCellImage(fl_grid.GetCell(next), pl.sprites[0]);
+        fl_grid.ChangeCellImage(next, pl.sprites[0]);
 
         next++;
     }

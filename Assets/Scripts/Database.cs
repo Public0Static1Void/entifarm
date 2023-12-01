@@ -60,7 +60,21 @@ public class Database : MonoBehaviour
     {
         using (IDbCommand cmd = conn.CreateCommand())
         {
-            string comm_txt = string.Format("INSERT INTO plants_users (id_user, id_plant) VALUES (1,{0})", plant_id);
+            string comm_txt = string.Format(
+                @"INSERT INTO ""main"".""plants_users""
+                (""id_plant"", ""id_user"")
+                VALUES ({0}, 1);", plant_id);
+            cmd.CommandText = comm_txt;
+
+            cmd.ExecuteNonQuery();
+        }
+    }
+    public static void RemoveFromInventory(int plant_id)
+    {
+        using (IDbCommand cmd = conn.CreateCommand())
+        {
+            string comm_txt = string.Format(
+                @"DELETE FROM plants_users WHERE id_plant={0}", plant_id);
             cmd.CommandText = comm_txt;
 
             cmd.ExecuteNonQuery();
@@ -72,7 +86,7 @@ public class Database : MonoBehaviour
 
         using (IDbCommand cmd = conn.CreateCommand())
         {
-            cmd.CommandText = "SELECT * FROM plants WHERE plants_users.id_user=1"; // hay que poner aquí la id del usuario para que no salgan todos
+            cmd.CommandText = "SELECT * FROM plants WHERE id_plant IN (SELECT id_plant FROM plants_users WHERE id_user=1);"; // hay que poner aquí la id del usuario EN CUESTIÓN
 
             using (IDataReader reader = cmd.ExecuteReader())
             {
