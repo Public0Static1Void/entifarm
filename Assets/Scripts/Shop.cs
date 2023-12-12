@@ -11,7 +11,6 @@ public class Shop : MonoBehaviour
     private Inventory inv;
 
     [SerializeField] private UnityEngine.UI.Text coins_text;
-    private float coins = 100;
 
 
     private void Start()
@@ -52,10 +51,11 @@ public class Shop : MonoBehaviour
 
     public void BuyPlant(Plants pl)
     {
-        if (coins < pl.buy_price)
+        if (GameManager.gm.coins < pl.buy_price)
             return;
 
-        coins -= pl.buy_price;
+        GameManager.gm.coins -= pl.buy_price;
+        GameManager.gm.UpdateCoinsText(GameManager.gm.coins);
 
         Database.InsertOnInventory(pl.id);
         inv.UpdateInventory();

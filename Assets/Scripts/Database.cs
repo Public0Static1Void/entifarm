@@ -74,7 +74,14 @@ public class Database : MonoBehaviour
         using (IDbCommand cmd = conn.CreateCommand())
         {
             string comm_txt = string.Format(
-                @"DELETE FROM plants_users WHERE id_plant={0}", plant_id);
+                @"DELETE FROM plants_users
+                WHERE ROWID IN (
+                	SELECT MIN(ROWID) as row_id
+                	FROM plants_users
+                	WHERE id_plant={0} AND id_user=1
+                );",
+                plant_id); // cambiar id_user al adecuado al implementar el login
+
             cmd.CommandText = comm_txt;
 
             cmd.ExecuteNonQuery();
@@ -86,7 +93,7 @@ public class Database : MonoBehaviour
 
         using (IDbCommand cmd = conn.CreateCommand())
         {
-            cmd.CommandText = "SELECT * FROM plants WHERE id_plant IN (SELECT id_plant FROM plants_users WHERE id_user=1);"; // hay que poner aquí la id del usuario EN CUESTIÓN
+            cmd.CommandText = "SELECT id_plant FROM plants_users WHERE id_user=1"; // hay que poner aquí la id del usuario EN CUESTIÓN
 
             using (IDataReader reader = cmd.ExecuteReader())
             {
@@ -100,7 +107,6 @@ public class Database : MonoBehaviour
                     for (int i = 0; i < reader.FieldCount; i++)
                     {
                         res[aux].Add(reader[i].ToString());
-                        Debug.Log(reader[i].ToString());
                     }
 
                     aux++;

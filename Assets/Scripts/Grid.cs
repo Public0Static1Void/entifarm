@@ -10,9 +10,6 @@ using UnityEngine.UIElements;
 
 public class Grid : MonoBehaviour
 {
-
-    private List<Plants> plants_data;
-
     [Header("Sprite del panel")]
     public Sprite plants_spr;
 
@@ -26,10 +23,6 @@ public class Grid : MonoBehaviour
     [SerializeField] private float offset = 0;
 
     [Space(10)]
-    [SerializeField] private bool scroll = false;
-    [SerializeField] private float scroll_speed = 0;
-    [SerializeField] private float scroll_max = 0;
-    [SerializeField] private float scroll_min = 0;
     [SerializeField] private bool setParent = false;
 
     [Space(10)]
@@ -38,6 +31,8 @@ public class Grid : MonoBehaviour
 
     private List<GameObject> cells;
     private List<UnityEngine.UI.Image> cells_im;
+
+    [SerializeField] private bool showGizmos = true;
 
     void Awake()
     {
@@ -69,6 +64,9 @@ public class Grid : MonoBehaviour
             CreateGrid();
     }
 
+    /// <summary>
+    /// Crea el campo de celdas
+    /// </summary>
     public void CreateGrid()
     {
         // Crear los paneles
@@ -116,22 +114,17 @@ public class Grid : MonoBehaviour
         }
     }
 
-
-    public void PrintPosition(GameObject ob)
-    {
-        Debug.Log(string.Format("X: {0}, Y: {1}", ob.transform.position.x, ob.transform.position.y));
-    }
-
+    /// <summary>
+    /// Devuelve el GameObject de la celda indicada en i
+    /// </summary>
     public GameObject GetCell(int i)
     {
         return cells[i];
     }
 
-    public void ChangeCellText(GameObject cell, string text)
-    {
-        cell.GetComponent<UnityEngine.UI.Text>().text = text;
-    }
-
+    /// <summary>
+    /// Cambia el sprite de la celda indicada en n
+    /// </summary>
     public void ChangeCellImage(int n, Sprite spr)
     {
         if (n > cells_im.Count)
@@ -139,8 +132,30 @@ public class Grid : MonoBehaviour
 
         cells_im[n].sprite = spr;
     }
+
+    /// <summary>
+    /// Pone las filas y/o columnas indicadas
+    /// </summary>
+    public void SetXY(int x, int y)
+    {
+        width = x;
+        height = y;
+    }
+
+    /// <summary>
+    /// Añade las filas y/o columnas indicadas
+    /// </summary>
+    public void AddXY(int x, int y)
+    {
+        width += x;
+        height += y;
+    }
+
     private void OnDrawGizmos()
     {
+        if (!showGizmos)
+            return;
+
         Vector3 panel_size = new Vector3 (x_size * 100, y_size * 100, 0);
 
         for (int i = 0; i < height; i++)

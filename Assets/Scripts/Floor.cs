@@ -23,8 +23,8 @@ public class Floor : MonoBehaviour
         {
             if (plants[i].grow_tick > Timer.timer.tick)
             {
-                if (!plants[i].Grow(1))
-                    RemovePlant(i);
+                //if (!plants[i].Grow(1))
+                   // RemovePlant(i);
             }
         }
     }
@@ -39,7 +39,7 @@ public class Floor : MonoBehaviour
         {
             fl_grid.ChangeCellImage(i, plants[i].sprites[plants[i].curr_sprite]);
         }
-        fl_grid.ChangeCellImage(next, fl_grid.plants_spr); /// Cambia el último sprite al suelo
+        fl_grid.ChangeCellImage(next - 1, fl_grid.plants_spr); /// Cambia el último sprite al suelo
 
         plants.RemoveAt(pos); // Quita la planta
 
@@ -53,7 +53,7 @@ public class Floor : MonoBehaviour
 
         pl.LoadSprites();
 
-        pl.grow_tick = Timer.timer.tick + pl.time;
+        pl.grow_tick = Timer.timer.tick + pl.time * 100;
 
         plants.Add(pl);
 

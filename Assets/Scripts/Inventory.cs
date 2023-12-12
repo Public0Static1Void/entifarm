@@ -5,13 +5,13 @@ using UnityEngine;
 public class Inventory : MonoBehaviour
 {
     List<ArrayList> list;
-    public List<Plants> plants;
+    public List<int> plants_id;
 
     private Grid inv_grid;
     private Grid pl_grid;
     private Floor floor;
 
-    private int next_plant;
+    private int next_plant = 0;
 
     void Start()
     {
@@ -34,45 +34,48 @@ public class Inventory : MonoBehaviour
     public void UpdateInventory()
     {
         list = Database.GetInventory();
-        plants = new List<Plants>();
+        plants_id = new List<int>();
 
-        for (int i = 0; i < list.Count; i++)
+        int count = list.Count;
+
+        if (count > inv_grid.height) // Si hay más plantas que celdas, se añaden las celdas necesarias
         {
-            Plants pl = new Plants();
-
-            pl.id = int.Parse("" + list[i][0]);
-            pl.name = list[i][1].ToString();
-            pl.time = int.Parse("" + list[i][2]);
-            pl.quantity = int.Parse("" + list[i][3]);
-            pl.sell_price = float.Parse("" + list[i][4]);
-            pl.buy_price = float.Parse("" + list[i][5]);
-            int.TryParse("" + list[i][6], out pl.season);
-
-            pl.LoadSprites();
-
-            plants.Add(pl);
-
-            //Pone el sprite en la celda
-            if (pl.sprites.Count > 0)
-                inv_grid.ChangeCellImage(i, pl.sprites[0]);
+            inv_grid.AddXY(0, count - inv_grid.height);
+            inv_grid.CreateGrid();
         }
+
+        for (int i = 0; i < count; i++)
+        {
+            plants_id.Add(int.Parse(list[i][0].ToString()));
+        }
+
+        for (int i = 0; i < inv_grid.height; i++)
+        {
+            inv_grid.ChangeCellImage(i, inv_grid.plants_spr); // cambia todas las celdas al sprite base
+        }
+
+        for (int i = 0; i < count; i++)
+        {
+            inv_grid.ChangeCellImage(i, GameManager.gm.plants[plants_id[i] - 1].sprites[0]);
+        }        
     }
 
     private void AddPlant()
     {
-        if (next_plant >= plants.Count)
+        if (next_plant > plants_id.Count && plants_id.Count <= 0)
             return;
+        if (next_plant == plants_id.Count && next_plant > 0)
+            next_plant--;
 
-        floor.AddPlant(plants[next_plant]);
+        floor.AddPlant(GameManager.gm.GetPlantId(plants_id[next_plant])); // planta la planta
 
-        if (next_plant < plants.Count)
+        Database.RemoveFromInventory(plants_id[next_plant]); // quita la planta del inventario
+
+        UpdateInventory();
+
+        if (next_plant < plants_id.Count)
             next_plant++;
         else
             next_plant = 0;
-
-    }
-    public void RemovePlant()
-    {
-
     }
 }

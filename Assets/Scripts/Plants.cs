@@ -40,15 +40,15 @@ public class Plants
         }
     }
 
-    public float Harvest()
-    {
-        return buy_price * 2;
-    }
-
     public bool Grow(int n)
     {
         if (curr_sprite >= sprite_num)
+        {
+            GameManager.gm.coins += sell_price;
+            GameManager.gm.UpdateCoinsText(GameManager.gm.coins);
+
             return false;
+        }
         if (n >= sprite_num)
             n = 1;
 

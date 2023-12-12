@@ -26,11 +26,13 @@ public class Timer : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             tick++;
+            Debug.Log(tick);
         }
     }
     IEnumerator SumTicks()
     {
         yield return new WaitForSeconds(1);
         tick++;
+        StartCoroutine(SumTicks());
     }
 }
