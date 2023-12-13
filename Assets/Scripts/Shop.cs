@@ -51,7 +51,7 @@ public class Shop : MonoBehaviour
 
     public void BuyPlant(Plants pl)
     {
-        if (GameManager.gm.coins < pl.buy_price && !GameManager.gm.mouse0Clicked)
+        if (GameManager.gm.coins < pl.buy_price)
             return;
 
         GameManager.gm.coins -= pl.buy_price;

@@ -15,21 +15,8 @@ public class Floor : MonoBehaviour
         fl_grid = GetComponent<Grid>();
 
         plants = new List<Plants>();
-    }
 
-    void Update()
-    {
-        for (int i = 0; i < next && plants.Count > 0; i++)
-        {
-            if (plants[i].grow_tick > Timer.timer.tick)
-            {
-                if (!plants[i].Grow(1))
-                    RemovePlant(i);
-
-                plants[i].grow_tick = Timer.timer.tick + plants[i].grow_tick;
-                Debug.Log(plants[i].grow_tick);
-            }
-        }
+        StartCoroutine(WaitToGrow()); // Comprobará cada segundo que plantas tienen que crecer
     }
 
     private void RemovePlant(int pos)
@@ -56,12 +43,35 @@ public class Floor : MonoBehaviour
 
         pl.LoadSprites();
 
-        pl.grow_tick = Timer.timer.tick + pl.time * 100;
+        pl.grow_tick = pl.time;
 
         plants.Add(pl);
 
         fl_grid.ChangeCellImage(next, pl.sprites[0]);
 
         next++;
+    }
+
+    /// <summary>
+    /// Comprueba cada segundo que plantas tienen que crecer
+    /// </summary>
+    IEnumerator WaitToGrow()
+    {
+        yield return new WaitForSeconds(1);
+        for (int i = 0; i < next && plants.Count > 0; i++)
+        {
+            if (plants[i].grow_tick <= 0)
+            {
+                if (!plants[i].Grow(1))
+                {
+                    RemovePlant(i);
+                    break;
+                }
+                plants[i].grow_tick = plants[i].time;
+            }
+            else
+                plants[i].grow_tick--;
+        }
+        StartCoroutine(WaitToGrow());
     }
 }

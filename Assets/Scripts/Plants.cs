@@ -16,6 +16,7 @@ public class Plants
     public int sprite_num = 3;
 
     public float grow_tick;
+    public float initial_grow_tick;
 
     // Sprite
     public List<Sprite> sprites;
@@ -47,8 +48,11 @@ public class Plants
             GameManager.gm.coins += sell_price;
             GameManager.gm.UpdateCoinsText(GameManager.gm.coins);
 
+            curr_sprite = 0;
+
             return false;
         }
+
         if (n >= sprite_num)
             n = 1;
 
