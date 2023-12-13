@@ -86,7 +86,11 @@ public class Grid : MonoBehaviour
 
                 /// Añade al botón su acción
                 panel.AddComponent<UnityEngine.UI.Button>();
-                //panel.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() => PrintPosition(panel));
+                ///panel.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() => PrintPosition(panel));
+                /// Esto hace que solo puedas pulsar el botón con click
+                Navigation nav = new Navigation();
+                nav.mode = Navigation.Mode.None;
+                panel.GetComponent<UnityEngine.UI.Button>().navigation = nav;
 
                 /// Le pone el sprite al botón
                 panel.AddComponent<UnityEngine.UI.Image>();

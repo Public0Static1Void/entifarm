@@ -23,8 +23,11 @@ public class Floor : MonoBehaviour
         {
             if (plants[i].grow_tick > Timer.timer.tick)
             {
-                //if (!plants[i].Grow(1))
-                   // RemovePlant(i);
+                if (!plants[i].Grow(1))
+                    RemovePlant(i);
+
+                plants[i].grow_tick = Timer.timer.tick + plants[i].grow_tick;
+                Debug.Log(plants[i].grow_tick);
             }
         }
     }
