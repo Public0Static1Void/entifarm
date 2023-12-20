@@ -13,10 +13,9 @@ public class Plants
     public float sell_price;
     public float buy_price;
     public int season = 0;
-    public int sprite_num = 3;
+    public int sprite_num = 2; // Se empieza a contar desde el 0
 
     public float grow_tick;
-    public float initial_grow_tick;
 
     // Sprite
     public List<Sprite> sprites;

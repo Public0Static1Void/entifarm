@@ -977,7 +977,7 @@ GameObject:
   - component: {fileID: 1996426589}
   - component: {fileID: 1996426592}
   m_Layer: 5
-  m_Name: Scroll area
+  m_Name: Scroll area inventory
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1183,7 +1183,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   plants_spr: {fileID: 0}
   width: 1
-  height: 8
+  height: 2
   x_size: 3
   y_size: 1
   offset: 110

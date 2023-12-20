@@ -16,7 +16,7 @@ public class Floor : MonoBehaviour
 
         plants = new List<Plants>();
 
-        StartCoroutine(WaitToGrow()); // Comprobará cada segundo que plantas tienen que crecer
+        StartCoroutine(WaitToGrow()); /// Comprobará cada segundo que plantas tienen que crecer
     }
 
     private void RemovePlant(int pos)
@@ -24,16 +24,15 @@ public class Floor : MonoBehaviour
         if (plants.Count <= 0)
             return;
 
-        // Asigna la nueva posición de las plantas
-        for (int i = 0; i < next; i++)
-        {
-            fl_grid.ChangeCellImage(i, plants[i].sprites[plants[i].curr_sprite]);
-        }
-        fl_grid.ChangeCellImage(next - 1, fl_grid.plants_spr); /// Cambia el último sprite al suelo
-
-        plants.RemoveAt(pos); // Quita la planta
+        plants.RemoveAt(pos); /// Quita la planta
 
         next--;
+
+        for (int i = 0; i < next; i++) /// Dibuja las plantas en su nueva posición
+        {
+            fl_grid.ChangeCellImage(i, plants[i].sprites[plants[i].curr_sprite]); /// Método de Grid.cs para cambiar el sprite
+        }
+        fl_grid.ChangeCellImage(next, fl_grid.plants_spr);
     }
 
     public void AddPlant(Plants pl)
@@ -60,18 +59,19 @@ public class Floor : MonoBehaviour
         yield return new WaitForSeconds(1);
         for (int i = 0; i < next && plants.Count > 0; i++)
         {
-            if (plants[i].grow_tick <= 0)
+            if (plants[i].grow_tick <= 0) /// Una vez el tiempo de la planta llegue a 0 esta crece
             {
                 if (!plants[i].Grow(1))
                 {
                     RemovePlant(i);
                     break;
                 }
-                plants[i].grow_tick = plants[i].time;
+                plants[i].grow_tick = plants[i].time; /// Hace que la planta espere otro ciclo para crecer
+                fl_grid.ChangeCellImage(i, plants[i].sprites[plants[i].curr_sprite]); /// Actualiza el sprite de la celda al siguiente
             }
             else
-                plants[i].grow_tick--;
+                plants[i].grow_tick--; /// Resta a los segundos que faltan para que crezca
         }
-        StartCoroutine(WaitToGrow());
+        StartCoroutine(WaitToGrow()); /// Repite el bucle
     }
 }

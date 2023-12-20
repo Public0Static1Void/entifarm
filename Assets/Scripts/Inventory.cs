@@ -40,7 +40,7 @@ public class Inventory : MonoBehaviour
 
         if (count > inv_grid.height) // Si hay más plantas que celdas, se añaden las celdas necesarias
         {
-            inv_grid.AddXY(0, count - inv_grid.height);
+            inv_grid.AddXY(0, 2);
             inv_grid.CreateGrid();
         }
 
@@ -62,7 +62,7 @@ public class Inventory : MonoBehaviour
 
     private void AddPlant()
     {
-        if (next_plant > plants_id.Count && plants_id.Count <= 0)
+        if (next_plant > plants_id.Count || plants_id.Count <= 0)
             return;
         if (next_plant == plants_id.Count && next_plant > 0)
             next_plant--;

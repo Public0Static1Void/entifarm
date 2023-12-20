@@ -28,10 +28,10 @@ public class Grid : MonoBehaviour
     [Space(10)]
     [SerializeField] private bool createOnLaunch = false;
 
-
     private List<GameObject> cells;
     private List<UnityEngine.UI.Image> cells_im;
 
+    [Space(10)]
     [SerializeField] private bool showGizmos = true;
 
     void Awake()
@@ -127,7 +127,7 @@ public class Grid : MonoBehaviour
     }
 
     /// <summary>
-    /// Cambia el sprite de la celda indicada en n
+    /// Pone el sprite del argumento en la celda indicada en n
     /// </summary>
     public void ChangeCellImage(int n, Sprite spr)
     {
