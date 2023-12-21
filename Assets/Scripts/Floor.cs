@@ -1,22 +1,38 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Floor : MonoBehaviour
 {
     private Grid fl_grid;
-    private Inventory inv;
 
     private List<Plants> plants;
+
+    [SerializeField] private bool hasCollector = false;
 
     public int next = 0;
     void Start()
     {
         fl_grid = GetComponent<Grid>();
+        for (int i = 0; i < fl_grid.width * fl_grid.height; i++)
+        {
+            int aux = i;
+            GameObject ob = fl_grid.GetCell(i);
+            ob.GetComponent<Button>().onClick.AddListener(() => Harvest(aux));           
+        }
 
         plants = new List<Plants>();
 
         StartCoroutine(WaitToGrow()); /// Comprobará cada segundo que plantas tienen que crecer
+    }
+
+    private void Harvest(int loc)
+    {
+        if (loc >= plants.Count || loc < 0 || plants.Count == 0)
+            return;
+        if (plants[loc].freshet)
+            RemovePlant(loc);
     }
 
     private void RemovePlant(int pos)
@@ -40,8 +56,6 @@ public class Floor : MonoBehaviour
         if (next == (fl_grid.width * fl_grid.height) - 1)
             return;
 
-        pl.LoadSprites();
-
         pl.grow_tick = pl.time;
 
         plants.Add(pl);
@@ -61,13 +75,12 @@ public class Floor : MonoBehaviour
         {
             if (plants[i].grow_tick <= 0) /// Una vez el tiempo de la planta llegue a 0 esta crece
             {
-                if (!plants[i].Grow(1))
+                if (!plants[i].Grow(1, fl_grid, i) && hasCollector)
                 {
                     RemovePlant(i);
                     break;
                 }
                 plants[i].grow_tick = plants[i].time; /// Hace que la planta espere otro ciclo para crecer
-                fl_grid.ChangeCellImage(i, plants[i].sprites[plants[i].curr_sprite]); /// Actualiza el sprite de la celda al siguiente
             }
             else
                 plants[i].grow_tick--; /// Resta a los segundos que faltan para que crezca

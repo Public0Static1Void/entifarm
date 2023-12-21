@@ -3,10 +3,82 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
+using static UnityEngine.GraphicsBuffer;
+
+[CustomEditor(typeof(Grid)), CanEditMultipleObjects]
+public class GridEditor : Editor // Editor *------------------------------------------*
+{
+    /*
+     * Tutorial : https://learn.unity.com/tutorial/editor-scripting#5c7f8528edbc2a002053b5fa
+    
+    [MenuItem("Prefabs/Delete all prefabs")]
+    public static void NewMenuOption()
+    {
+        PlayerPrefs.DeleteAll();
+    }
+    [MenuItem("Tools/SubMenu/Option")]
+    private static void NewNestedOption()
+    {
+    }
+    // Add a new menu item with hotkey CTRL-G
+
+    - Inputs:
+    %  CTRL on Windows / CMD on OSX
+    #  Shift
+    &  Alt
+    LEFT/RIGHT/UP/DOWN  Arrow keys
+    F1F2  F keys
+    HOME, END, PGUP, PGDN
+
+    [MenuItem("Tools/Item %g")]
+    private static void NewNestedOption()
+    {
+    }
+    */
+
+
+
+    public override void OnInspectorGUI()
+    {
+        /*
+        Grid grid = (Grid)target;
+
+
+        EditorGUILayout.LabelField("Tamaño");
+        EditorGUILayout.IntField("Width", grid.width);
+        EditorGUILayout.IntField("Height", grid.height);
+
+        EditorGUILayout.Space();
+
+        EditorGUILayout.LabelField("Sprite base");
+        EditorGUILayout.ObjectField(grid.plants_spr, typeof(Sprite), true);
+
+        EditorGUILayout.Space();
+
+        EditorGUILayout.LabelField("Otros datos de diseño");
+        EditorGUILayout.FloatField("X size", grid.x_size);
+        EditorGUILayout.FloatField("Y size", grid.y_size);
+        EditorGUILayout.FloatField("Offset", grid.offset);
+
+        bool textBt = EditorGUILayout.Toggle("Text", grid.hasText);
+        bool showBtn = false;
+        showBtn = EditorGUILayout.Toggle("Show Button", showBtn);
+        */
+        DrawDefaultInspector();
+    }
+    void OnGUI()
+    {
+        bool showBtn = false; 
+        showBtn = EditorGUILayout.Toggle("Show Button", showBtn);
+
+    }
+}
 
 public class Grid : MonoBehaviour
 {
@@ -18,9 +90,13 @@ public class Grid : MonoBehaviour
     public int height;
 
     [Header("Otros datos de diseño")]
-    [SerializeField] private float x_size = 0;
-    [SerializeField] private float y_size = 0;
-    [SerializeField] private float offset = 0;
+    [SerializeField] public float x_size = 0;
+    [SerializeField] public float y_size = 0;
+    [SerializeField] public float offset = 0;
+
+    [SerializeField] public bool hasText;
+    [SerializeField] private int textNum = 1;
+    [SerializeField] public Font textFont;
 
     [Space(10)]
     [SerializeField] private bool setParent = false;
@@ -93,18 +169,44 @@ public class Grid : MonoBehaviour
                 panel.GetComponent<UnityEngine.UI.Button>().navigation = nav;
 
                 /// Le pone el sprite al botón
-                panel.AddComponent<UnityEngine.UI.Image>();
-                UnityEngine.UI.Image im = panel.GetComponent<UnityEngine.UI.Image>();
+                UnityEngine.UI.Image im = panel.AddComponent<UnityEngine.UI.Image>();
                 im.sprite = plants_spr;
 
                 /// Cambia el nombre del objeto
                 panel.name = string.Format("{0} {1}", transform.name, i + j);
 
                 /// Añade un texto al panel
-                ///panel.AddComponent<UnityEngine.UI.Text>();
-                ///Text text = panel.GetComponent<Text>();
-                ///text.text = string.Format("{0} {1}", transform.name, i + j);
-                ///text.color = Color.white;
+                if (hasText)
+                {
+                    GameObject t = new GameObject();
+                    t.transform.SetParent(panel.transform);
+                    t.name = "Text";
+                    RectTransform rect = t.AddComponent<RectTransform>();
+                    rect.anchoredPosition = new Vector2(50 * x_size, -7.5f * y_size);
+
+
+                    UnityEngine.UI.Text text = t.AddComponent<UnityEngine.UI.Text>();
+                    text.font = textFont;
+                    text.fontSize = 32;
+                    text.horizontalOverflow = UnityEngine.HorizontalWrapMode.Overflow;
+                    text.text = "";
+
+                    if (textNum > 1) /// Añade el segundo texto a la izquierda del panel
+                    {
+                        GameObject p = new GameObject();
+                        p.transform.SetParent(panel.transform);
+                        p.name = "Text2";
+                        RectTransform rectt = p.AddComponent<RectTransform>();
+                        rectt.anchoredPosition = new Vector2(-30 * x_size, -7.5f * y_size);
+
+
+                        UnityEngine.UI.Text text2 = p.AddComponent<UnityEngine.UI.Text>();
+                        text2.font = textFont;
+                        text2.fontSize = text.fontSize;
+                        text2.horizontalOverflow = text.horizontalOverflow;
+                        text2.text = "";
+                    }
+                }
 
                 /// Pone al poseedor del script como padre
                 if (setParent)
@@ -135,6 +237,25 @@ public class Grid : MonoBehaviour
             return;
 
         cells_im[n].sprite = spr;
+    }
+    /// <summary>
+    /// Cambia el texto de la celda indicada
+    /// </summary>
+    public void ChangeCellText(int n, string txt, int text_num)
+    {
+        if (n > cells.Count)
+            return;
+
+        switch (text_num)
+        {
+            case 1:
+                transform.GetChild(n).GetComponentInChildren<UnityEngine.UI.Text>().text = txt;
+                break;
+            case 2:
+                transform.GetChild(n).GetChild(1).GetComponent<UnityEngine.UI.Text>().text = txt;
+                break;
+        }
+
     }
 
     /// <summary>
