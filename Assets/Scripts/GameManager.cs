@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     [Header("Animaciones")]
     [SerializeField] private Animator shop_anim, menu_anim;
     private bool set_shop = false;
-    private bool set_menu = false;
+    private bool set_menu = false ;
 
     [Header("Monedas")]
     public float coins = 100;
@@ -38,6 +38,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Button save_button;
     [SerializeField] private Button load_button;
     [SerializeField] private Button exit_button;
+
+    private AudioSource audio;
+    [SerializeField] AudioClip button_clip;
+    [SerializeField] AudioClip harvest_clip;
 
     void Start()
     {
@@ -78,11 +82,17 @@ public class GameManager : MonoBehaviour
             loginField_name.onEndEdit.AddListener(delegate { OnEnterUserData(loginField_name, loginField_psw, true); });
             loginField_psw.onEndEdit.AddListener(delegate { OnEnterUserData(loginField_name, loginField_psw, true); });
         }
-        save_button.onClick.AddListener(() => SaveGame());
-        load_button.onClick.AddListener(() => LoadGame());
+        if (save_button != null)
+        {
+            save_button.onClick.AddListener(() => SaveGame());
+            load_button.onClick.AddListener(() => LoadGame());
+        }
 
         // Suscribirse al evento de cambio de escena
         SceneManager.sceneLoaded += OnSceneLoaded;
+
+        // Referencias
+        audio = GetComponent<AudioSource>();
     }
 
     public Plants GetPlantId(int id)
@@ -164,7 +174,11 @@ public class GameManager : MonoBehaviour
             return false;
         }
 
-        Database.CreateUser(user, psw);
+        List<ArrayList> data = Database.CreateUser(user, psw);
+
+        id_user = int.Parse(data[0][0].ToString());
+
+        Database.InsertOnInventory(1, id_user);
 
         ChangeScene("Main");
 
@@ -175,6 +189,9 @@ public class GameManager : MonoBehaviour
     {
         if ((Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)) && name_in.text != "" && psw_in.text != "")
         {
+            audio.clip = button_clip;
+            audio.Play();
+
             string name = "";
             string psw = "";
 
@@ -214,6 +231,9 @@ public class GameManager : MonoBehaviour
 
     public void SaveGame()
     {
+        audio.clip = button_clip;
+        audio.Play();
+
         Database.SaveGame(Timer.timer.tick, coins, floor.fl_grid.height * floor.fl_grid.width, id_user);
         info_text.text = "Partida guardada correctamente.";
         Debug.Log("Partida guardada.");
@@ -223,6 +243,9 @@ public class GameManager : MonoBehaviour
 
     public void LoadGame()
     {
+        audio.clip = button_clip;
+        audio.Play();
+
         List<ArrayList> game = Database.LoadGame(id_user);
 
         Timer.timer.tick = int.Parse(game[0][1].ToString());
@@ -242,5 +265,17 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Game closed");
         Application.Quit();
+    }
+
+    public void PlayAudio()
+    {
+        audio.clip = button_clip;
+        audio.Play();
+    }
+
+    public void PlayHarvestSound()
+    {
+        audio.clip = harvest_clip;
+        audio.Play();
     }
 }

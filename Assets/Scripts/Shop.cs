@@ -64,5 +64,7 @@ public class Shop : MonoBehaviour
 
         Database.InsertOnInventory(pl.id, GameManager.gm.id_user);
         inv.UpdateInventory();
+
+        GameManager.gm.PlayAudio();
     }
 }

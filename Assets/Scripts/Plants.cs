@@ -43,28 +43,4 @@ public class Plants
         if (sprites.Count > sprite_num)
             Debug.LogError("Error con " + name);
     }
-
-    public bool Grow(int n, Grid grid, int cell_pos)
-    {
-        if (curr_sprite >= sprite_num - 1)
-        {
-            GameManager.gm.coins += sell_price;
-            GameManager.gm.UpdateCoinsText(GameManager.gm.coins);
-
-            curr_sprite = 0;
-
-            freshet = true;
-
-            return false;
-        }
-
-        if (n >= sprite_num)
-            n = 1;
-
-        curr_sprite += n;
-
-        grid.ChangeCellImage(cell_pos, sprites[curr_sprite]);
-
-        return true;
-    }
 }

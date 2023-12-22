@@ -149,8 +149,9 @@ public class Database : MonoBehaviour
         }
     }
 
-    public static void CreateUser(string name, string psw)
-    { 
+    public static List<ArrayList> CreateUser(string name, string psw)
+    {
+        List<ArrayList> res = new List<ArrayList>();
         using (IDbCommand cmd = conn.CreateCommand())
         {
             psw = GameManager.gm.GetMD5Hash(psw);
@@ -164,6 +165,30 @@ public class Database : MonoBehaviour
             Debug.Log(query);
 
             cmd.ExecuteNonQuery();
+
+            query = string.Format(@"SELECT * FROM users WHERE user=""{0}"" AND psw=""{1}""", name, psw);
+            cmd.CommandText = query;
+
+            using (IDataReader reader = cmd.ExecuteReader())
+            {
+                int aux = 0;
+                // Lee los datos
+                while (reader.Read())
+                {
+                    res.Add(new ArrayList());
+                    res[aux] = new ArrayList();
+
+                    for (int i = 0; i < reader.FieldCount; i++)
+                    {
+                        res[aux].Add(reader[i].ToString());
+                        Debug.Log(reader[i].ToString());
+                    }
+
+                    aux++;
+                }
+            }
+
+            return res;
         }
     }
 

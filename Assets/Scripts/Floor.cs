@@ -12,6 +12,8 @@ public class Floor : MonoBehaviour
 
     [SerializeField] private bool hasCollector = false;
 
+    List<int> plants_spr;
+
     public int next = 0;
     void Start()
     {
@@ -24,6 +26,11 @@ public class Floor : MonoBehaviour
         }
 
         plants = new List<Plants>();
+
+        plants_spr = new List<int>();
+        for (int i = 0; i < plants.Count; i++)
+            plants_spr.Add(0);
+
 
         StartCoroutine(WaitToGrow()); /// Comprobará cada segundo que plantas tienen que crecer
     }
@@ -40,6 +47,11 @@ public class Floor : MonoBehaviour
     {
         if (plants.Count <= 0)
             return;
+
+        GameManager.gm.coins += plants[pos].sell_price;
+        GameManager.gm.UpdateCoinsText(GameManager.gm.coins);
+
+        GameManager.gm.PlayHarvestSound();
 
         plants.RemoveAt(pos); /// Quita la planta
 
@@ -63,6 +75,12 @@ public class Floor : MonoBehaviour
 
         fl_grid.ChangeCellImage(next, pl.sprites[0]);
 
+        plants_spr.Clear();
+        for (int i = 0; i < plants.Count; i++)
+            plants_spr.Add(0);
+
+        GameManager.gm.PlayAudio();
+
         next++;
     }
 
@@ -72,19 +90,26 @@ public class Floor : MonoBehaviour
     IEnumerator WaitToGrow()
     {
         yield return new WaitForSeconds(1);
-        for (int i = 0; i < next && plants.Count > 0; i++)
+
+        for (int i = 0; i < plants.Count && i < next; i++)
         {
-            if (plants[i].grow_tick <= 0) /// Una vez el tiempo de la planta llegue a 0 esta crece
+            plants[i].grow_tick--;
+            if (plants[i].grow_tick <= 0)
             {
-                if (!plants[i].Grow(1, fl_grid, i) && hasCollector)
+                if (plants_spr[i] >= plants[i].sprite_num)
                 {
-                    RemovePlant(i);
-                    break;
+                    plants[i].freshet = true;
                 }
-                plants[i].grow_tick = plants[i].time; /// Hace que la planta espere otro ciclo para crecer
+                else
+                {
+                    plants[i].grow_tick = plants[i].time;
+                    plants[i].curr_sprite = plants_spr[i];
+                    plants_spr[i]++;
+                }
+
+                fl_grid.ChangeCellImage(i, plants[i].sprites[plants_spr[i] - 1]);
+
             }
-            else
-                plants[i].grow_tick--; /// Resta a los segundos que faltan para que crezca
         }
         StartCoroutine(WaitToGrow()); /// Repite el bucle
     }
