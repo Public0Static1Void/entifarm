@@ -11,75 +11,6 @@ using UnityEngine.UI;
 using UnityEngine.UIElements;
 using static UnityEngine.GraphicsBuffer;
 
-[CustomEditor(typeof(Grid)), CanEditMultipleObjects]
-public class GridEditor : Editor // Editor *------------------------------------------*
-{
-    /*
-     * Tutorial : https://learn.unity.com/tutorial/editor-scripting#5c7f8528edbc2a002053b5fa
-    
-    [MenuItem("Prefabs/Delete all prefabs")]
-    public static void NewMenuOption()
-    {
-        PlayerPrefs.DeleteAll();
-    }
-    [MenuItem("Tools/SubMenu/Option")]
-    private static void NewNestedOption()
-    {
-    }
-    // Add a new menu item with hotkey CTRL-G
-
-    - Inputs:
-    %  CTRL on Windows / CMD on OSX
-    #  Shift
-    &  Alt
-    LEFT/RIGHT/UP/DOWN  Arrow keys
-    F1F2  F keys
-    HOME, END, PGUP, PGDN
-
-    [MenuItem("Tools/Item %g")]
-    private static void NewNestedOption()
-    {
-    }
-    */
-
-
-
-    public override void OnInspectorGUI()
-    {
-        /*
-        Grid grid = (Grid)target;
-
-
-        EditorGUILayout.LabelField("Tamaño");
-        EditorGUILayout.IntField("Width", grid.width);
-        EditorGUILayout.IntField("Height", grid.height);
-
-        EditorGUILayout.Space();
-
-        EditorGUILayout.LabelField("Sprite base");
-        EditorGUILayout.ObjectField(grid.plants_spr, typeof(Sprite), true);
-
-        EditorGUILayout.Space();
-
-        EditorGUILayout.LabelField("Otros datos de diseño");
-        EditorGUILayout.FloatField("X size", grid.x_size);
-        EditorGUILayout.FloatField("Y size", grid.y_size);
-        EditorGUILayout.FloatField("Offset", grid.offset);
-
-        bool textBt = EditorGUILayout.Toggle("Text", grid.hasText);
-        bool showBtn = false;
-        showBtn = EditorGUILayout.Toggle("Show Button", showBtn);
-        */
-        DrawDefaultInspector();
-    }
-    void OnGUI()
-    {
-        bool showBtn = false; 
-        showBtn = EditorGUILayout.Toggle("Show Button", showBtn);
-
-    }
-}
-
 public class Grid : MonoBehaviour
 {
     [Header("Sprite del panel")]
@@ -275,7 +206,7 @@ public class Grid : MonoBehaviour
         width += x;
         height += y;
     }
-
+    /*
     private void OnDrawGizmos()
     {
         if (!showGizmos)
@@ -294,4 +225,5 @@ public class Grid : MonoBehaviour
             }
         }
     }
+    */
 }

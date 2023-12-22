@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     [Header("Animaciones")]
     [SerializeField] private Animator shop_anim, menu_anim;
     private bool set_shop = false;
-    private bool set_menu = false ;
+    private bool set_menu = true;
 
     [Header("Monedas")]
     public float coins = 100;
@@ -217,7 +217,7 @@ public class GameManager : MonoBehaviour
             shop_anim = GameObject.Find("Shop items").GetComponent<Animator>();
             coins_text = GameObject.Find("Coins text").GetComponent<UnityEngine.UI.Text>();
             menu_anim = GameObject.Find("Menu").GetComponent<Animator>();
-            floor = GameObject.Find("Floor").GetComponent<Floor>();
+            floor = GameObject.Find("Floor grid").GetComponent<Floor>();
             info_text = GameObject.Find("Info text").GetComponent<TMP_Text>();
             save_button = GameObject.Find("Save game").GetComponent<Button>();
             load_button = GameObject.Find("Load game").GetComponent<Button>();
@@ -250,6 +250,8 @@ public class GameManager : MonoBehaviour
 
         Timer.timer.tick = int.Parse(game[0][1].ToString());
         coins = int.Parse(game[0][2].ToString());
+
+        UpdateCoinsText(coins);
 
         info_text.text = "Partida cargada.";
         StartCoroutine(CleanText());
