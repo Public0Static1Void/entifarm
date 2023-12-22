@@ -1055,6 +1055,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shop_anim: {fileID: 1337214313}
+  menu_anim: {fileID: 0}
   coins: 100
   coins_text: {fileID: 1337214312}
   user: 
@@ -1063,6 +1064,9 @@ MonoBehaviour:
   registerField_psw: {fileID: 1023993435}
   loginField_name: {fileID: 1380452138}
   loginField_psw: {fileID: 6463141}
+  floor: {fileID: 0}
+  info_text: {fileID: 0}
+  save_button: {fileID: 0}
 --- !u!1 &519207561
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,7 +5,8 @@ using UnityEngine.UI;
 
 public class Floor : MonoBehaviour
 {
-    private Grid fl_grid;
+    [HideInInspector]
+    public Grid fl_grid;
 
     private List<Plants> plants;
 

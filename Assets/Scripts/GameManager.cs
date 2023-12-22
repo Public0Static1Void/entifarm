@@ -11,21 +11,33 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager gm { get; private set; }
 
-    [SerializeField] private Animator shop_anim;
+    [Header("Animaciones")]
+    [SerializeField] private Animator shop_anim, menu_anim;
     private bool set_shop = false;
+    private bool set_menu = false;
 
+    [Header("Monedas")]
     public float coins = 100;
     [SerializeField] private UnityEngine.UI.Text coins_text;
 
     public List<Plants> plants;
 
-    public string user = "";
+    [Header("Usuario activo")]
+    public string user = "Default";
     public int id_user = -1;
-    
+
+    [Header("Input fields")]
     [SerializeField] private TMP_InputField registerField_name;
     [SerializeField] private TMP_InputField registerField_psw;
     [SerializeField] private TMP_InputField loginField_name;
     [SerializeField] private TMP_InputField loginField_psw;
+
+    [Header("Referencias")]
+    [SerializeField] private Floor floor;
+    [SerializeField] private TMP_Text info_text;
+    [SerializeField] private Button save_button;
+    [SerializeField] private Button load_button;
+    [SerializeField] private Button exit_button;
 
     void Start()
     {
@@ -66,6 +78,8 @@ public class GameManager : MonoBehaviour
             loginField_name.onEndEdit.AddListener(delegate { OnEnterUserData(loginField_name, loginField_psw, true); });
             loginField_psw.onEndEdit.AddListener(delegate { OnEnterUserData(loginField_name, loginField_psw, true); });
         }
+        save_button.onClick.AddListener(() => SaveGame());
+        load_button.onClick.AddListener(() => LoadGame());
 
         // Suscribirse al evento de cambio de escena
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -89,6 +103,7 @@ public class GameManager : MonoBehaviour
             coins_text.text = "Coins: " + n.ToString();
     }
 
+    // Inputs -------------------------------------------------------------------==================================================
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
@@ -96,6 +111,12 @@ public class GameManager : MonoBehaviour
             set_shop = !set_shop;
             if (shop_anim != null)
                 shop_anim.SetBool("scroll", set_shop);
+        }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            set_menu = !set_menu;
+            if (menu_anim != null)
+                menu_anim.SetBool("open", set_menu);
         }
     }
 
@@ -178,6 +199,48 @@ public class GameManager : MonoBehaviour
         {
             shop_anim = GameObject.Find("Shop items").GetComponent<Animator>();
             coins_text = GameObject.Find("Coins text").GetComponent<UnityEngine.UI.Text>();
+            menu_anim = GameObject.Find("Menu").GetComponent<Animator>();
+            floor = GameObject.Find("Floor").GetComponent<Floor>();
+            info_text = GameObject.Find("Info text").GetComponent<TMP_Text>();
+            save_button = GameObject.Find("Save game").GetComponent<Button>();
+            load_button = GameObject.Find("Load game").GetComponent<Button>();
+            exit_button = GameObject.Find("Exit").GetComponent<Button>();
+
+            save_button.onClick.AddListener(() => SaveGame());
+            load_button.onClick.AddListener(() => LoadGame());
+            exit_button.onClick.AddListener(() => QuitGame());
         }
+    }
+
+    public void SaveGame()
+    {
+        Database.SaveGame(Timer.timer.tick, coins, floor.fl_grid.height * floor.fl_grid.width, id_user);
+        info_text.text = "Partida guardada correctamente.";
+        Debug.Log("Partida guardada.");
+
+        StartCoroutine(CleanText());
+    }
+
+    public void LoadGame()
+    {
+        List<ArrayList> game = Database.LoadGame(id_user);
+
+        Timer.timer.tick = int.Parse(game[0][1].ToString());
+        coins = int.Parse(game[0][2].ToString());
+
+        info_text.text = "Partida cargada.";
+        StartCoroutine(CleanText());
+    }
+
+    IEnumerator CleanText()
+    {
+        yield return new WaitForSeconds(3);
+        info_text.text = "";
+    }
+
+    public void QuitGame()
+    {
+        Debug.Log("Game closed");
+        Application.Quit();
     }
 }

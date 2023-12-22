@@ -224,7 +224,7 @@ public class Database : MonoBehaviour
         using (IDbCommand cmd = conn.CreateCommand())
         {
             string query = string.Format(@"
-                SELECT * FROM saved_games WHERE id_user={0}
+                SELECT * FROM saved_games WHERE id_user={0} ORDER BY id_saved_game DESC LIMIT 1
             ", id_user);
 
             cmd.CommandText = query;
