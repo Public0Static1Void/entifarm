@@ -33,7 +33,7 @@ public class Inventory : MonoBehaviour
 
     public void UpdateInventory()
     {
-        list = Database.GetInventory();
+        list = Database.GetInventory(GameManager.gm.id_user);
         plants_id = new List<int>();
 
         int count = list.Count;
@@ -69,7 +69,7 @@ public class Inventory : MonoBehaviour
 
         floor.AddPlant(GameManager.gm.GetPlantId(plants_id[next_plant])); // planta la planta
 
-        Database.RemoveFromInventory(plants_id[next_plant]); // quita la planta del inventario
+        Database.RemoveFromInventory(plants_id[next_plant], GameManager.gm.id_user); // quita la planta del inventario
 
         UpdateInventory();
 

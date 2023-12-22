@@ -62,7 +62,7 @@ public class Shop : MonoBehaviour
         GameManager.gm.coins -= pl.buy_price;
         GameManager.gm.UpdateCoinsText(GameManager.gm.coins);
 
-        Database.InsertOnInventory(pl.id);
+        Database.InsertOnInventory(pl.id, GameManager.gm.id_user);
         inv.UpdateInventory();
     }
 }
